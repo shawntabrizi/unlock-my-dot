@@ -2,13 +2,16 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { useSubstrate } from './SubstrateContext';
 import { useAccount } from './AccountContext';
 import { hexToString } from '@polkadot/util';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 const AccountBalanceContext = createContext();
 
 const useAccountBalance = () => {
   const context = useContext(AccountBalanceContext);
   if (!context) {
-    throw new Error('useAccountBalance must be used within an AccountBalanceProvider');
+    throw new Error(
+      'useAccountBalance must be used within an AccountBalanceProvider'
+    );
   }
   return context;
 };
@@ -82,49 +85,122 @@ const AccountBalanceProvider = ({ children }) => {
   };
 
   return (
-    <AccountBalanceContext.Provider value={{ balances, setBalances, formattedAddress, formattedBalance, calculateTotalBalance, tokenInfo }}>
+    <AccountBalanceContext.Provider
+      value={{
+        balances,
+        setBalances,
+        formattedAddress,
+        formattedBalance,
+        calculateTotalBalance,
+        tokenInfo,
+      }}
+    >
       {children}
     </AccountBalanceContext.Provider>
   );
-}
+};
 
 const AccountBalance = () => {
-  const { balances, formattedAddress, formattedBalance, calculateTotalBalance, tokenInfo } = useAccountBalance();
+  const {
+    balances,
+    formattedAddress,
+    formattedBalance,
+    calculateTotalBalance,
+    tokenInfo,
+  } = useAccountBalance();
 
   return (
     <div>
       {balances ? (
         <div>
+          <h2>Your Overall Balance</h2>
           <p>
             <strong>Address:</strong> {formattedAddress()}
           </p>
           <div>
-            <strong>Total Balance:</strong>{' '}
-            {formattedBalance(calculateTotalBalance())} {tokenInfo.name}
-            <ul>
-              <li>
-                Reserved: {formattedBalance(balances?.reservedBalance)}{' '}
-                {tokenInfo.name}
-              </li>
-              <li>
-                Free: {formattedBalance(balances?.freeBalance)} {tokenInfo.name}
-              </li>
+            <ProgressBar>
+              <ProgressBar
+                striped
+                variant="success"
+                now={balances.availableBalance}
+                max={calculateTotalBalance()}
+                label={formattedBalance(balances.availableBalance)}
+                key={1}
+              />
+              <ProgressBar
+                variant="warning"
+                now={balances.lockedBalance}
+                max={calculateTotalBalance()}
+                label={formattedBalance(balances.lockedBalance)}
+                key={2}
+              />
+              <ProgressBar
+                variant="danger"
+                now={balances.reservedBalance}
+                max={calculateTotalBalance()}
+                label={formattedBalance(balances.reservedBalance)}
+                key={3}
+              />
+            </ProgressBar>
+            <p>
+              You have a total balance of{' '}
+              {formattedBalance(calculateTotalBalance())} {tokenInfo.name}.
+              <br />
+              You can transfer {formattedBalance(
+                balances?.availableBalance
+              )}{' '}
+              {tokenInfo.name} right now.
+              <br />
+              You cannot transfer{' '}
+              {formattedBalance(
+                balances.reservedBalance.add(balances.lockedBalance)
+              )}{' '}
+              {tokenInfo.name} because{' '}
+              {formattedBalance(balances.reservedBalance)} {tokenInfo.name} is
+              reserved, and {formattedBalance(balances.lockedBalance)}{' '}
+              {tokenInfo.name} is locked.
+              <br />
+              You can use the information and buttons below to unlock your{' '}
+              {tokenInfo.name}.
+            </p>
+            <details>
+              <summary>Raw Balance Data</summary>
+              <strong>Total Balance:</strong>{' '}
+              {formattedBalance(calculateTotalBalance())} {tokenInfo.name}
               <ul>
                 <li>
-                  Locked: {formattedBalance(balances?.lockedBalance)}{' '}
+                  Reserved: {formattedBalance(balances?.reservedBalance)}{' '}
                   {tokenInfo.name}
-                  <ul>
-                    {balances?.lockedBreakdown.map((item) => {
-                      return <li>{hexToString(item.id.toHex())}: {formattedBalance(item.amount)} {tokenInfo.name}</li>
-                    })}
-                  </ul>
                 </li>
                 <li>
-                  Available: {formattedBalance(balances?.availableBalance)}{' '}
+                  Free: {formattedBalance(balances?.freeBalance)}{' '}
                   {tokenInfo.name}
                 </li>
+                <ul>
+                  <li>
+                    Locked: {formattedBalance(balances?.lockedBalance)}{' '}
+                    {tokenInfo.name}
+                    <ul>
+                      {balances?.lockedBreakdown.map((item, i) => {
+                        return (
+                          <li key={i}>
+                            {hexToString(item.id.toHex())}:{' '}
+                            {formattedBalance(item.amount)} {tokenInfo.name}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </li>
+                  <li>
+                    Available: {formattedBalance(balances?.availableBalance)}{' '}
+                    {tokenInfo.name}
+                  </li>
+                </ul>
               </ul>
-            </ul>
+              <p>
+                Raw Data <br /> <code>{JSON.stringify(balances, null, 2)}</code>
+              </p>
+            </details>
           </div>
         </div>
       ) : (

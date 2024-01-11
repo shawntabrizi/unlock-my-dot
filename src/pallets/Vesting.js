@@ -73,7 +73,7 @@ const Vesting = () => {
               now={amountVesting}
               max={balances.vestingTotal}
               label={formattedBalance(amountVesting)}
-              key={2}
+              key={3}
             />
           </ProgressBar>
           <p>
