@@ -4,12 +4,29 @@ import { Button, Card, Dropdown } from 'react-bootstrap';
 
 const AccountContext = createContext();
 
-const AccountProvider = ({ appName, children }) => {
+const AccountProvider = ({ appName, forceAccount, children }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
 
   const connectAccounts = async () => {
+
+    // TODO: Remove after done debugging
+    if (forceAccount) {
+      let forcedAccount = {
+        address: forceAccount,
+        meta: {
+          name: "Forced Account",
+        },
+      };
+
+      setAccounts([forcedAccount]);
+      setSelectedAccount(forcedAccount)
+      setIsConnected(true);
+
+      return;
+    }
+
     try {
       await web3Enable(appName);
       const unsubscribe = await web3AccountsSubscribe((injectedAccounts) => {

@@ -1,8 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext, useContext } from 'react';
 import { useSubstrate } from './SubstrateContext';
 import { useAccount } from './AccountContext';
+import { hexToString } from '@polkadot/util';
 
-const AccountBalance = () => {
+const AccountBalanceContext = createContext();
+
+const useAccountBalance = () => {
+  const context = useContext(AccountBalanceContext);
+  if (!context) {
+    throw new Error('useAccountBalance must be used within an AccountBalanceProvider');
+  }
+  return context;
+};
+
+const AccountBalanceProvider = ({ children }) => {
   const { api } = useSubstrate();
   const { selectedAccount } = useAccount();
   const [balances, setBalances] = useState(null);
@@ -71,8 +82,18 @@ const AccountBalance = () => {
   };
 
   return (
+    <AccountBalanceContext.Provider value={{ balances, setBalances, formattedAddress, formattedBalance, calculateTotalBalance, tokenInfo }}>
+      {children}
+    </AccountBalanceContext.Provider>
+  );
+}
+
+const AccountBalance = () => {
+  const { balances, formattedAddress, formattedBalance, calculateTotalBalance, tokenInfo } = useAccountBalance();
+
+  return (
     <div>
-      {selectedAccount ? (
+      {balances ? (
         <div>
           <p>
             <strong>Address:</strong> {formattedAddress()}
@@ -92,6 +113,11 @@ const AccountBalance = () => {
                 <li>
                   Locked: {formattedBalance(balances?.lockedBalance)}{' '}
                   {tokenInfo.name}
+                  <ul>
+                    {balances?.lockedBreakdown.map((item) => {
+                      return <li>{hexToString(item.id.toHex())}: {formattedBalance(item.amount)} {tokenInfo.name}</li>
+                    })}
+                  </ul>
                 </li>
                 <li>
                   Available: {formattedBalance(balances?.availableBalance)}{' '}
@@ -108,4 +134,4 @@ const AccountBalance = () => {
   );
 };
 
-export default AccountBalance;
+export { AccountBalance, AccountBalanceProvider, useAccountBalance };
