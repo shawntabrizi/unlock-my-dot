@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/polkadot-react-template/static/css/main.fe595d58.css",
+    "main.js": "/polkadot-react-template/static/js/main.8db07028.js",
+    "index.html": "/polkadot-react-template/index.html",
+    "main.fe595d58.css.map": "/polkadot-react-template/static/css/main.fe595d58.css.map",
+    "main.8db07028.js.map": "/polkadot-react-template/static/js/main.8db07028.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fe595d58.css",
+    "static/js/main.8db07028.js"
+  ]
+}
