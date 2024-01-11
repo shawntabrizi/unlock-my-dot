@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/unlock-my-dot/static/css/main.241951ba.css",
-    "main.js": "/unlock-my-dot/static/js/main.b8032248.js",
+    "main.js": "/unlock-my-dot/static/js/main.92be5d8d.js",
     "index.html": "/unlock-my-dot/index.html",
     "main.241951ba.css.map": "/unlock-my-dot/static/css/main.241951ba.css.map",
-    "main.b8032248.js.map": "/unlock-my-dot/static/js/main.b8032248.js.map"
+    "main.92be5d8d.js.map": "/unlock-my-dot/static/js/main.92be5d8d.js.map"
   },
   "entrypoints": [
     "static/css/main.241951ba.css",
-    "static/js/main.b8032248.js"
+    "static/js/main.92be5d8d.js"
   ]
 }
