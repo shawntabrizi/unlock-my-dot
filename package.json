@@ -1,12 +1,14 @@
 {
-  "name": "polkadot-react-template",
+  "name": "unlock-my-dot",
   "version": "0.1.0",
-  "homepage": "https://shawntabrizi.github.io/polkadot-react-template",
+  "homepage": "https://shawntabrizi.github.io/unlock-my-dot",
   "private": true,
   "dependencies": {
     "@polkadot/api": "^10.11.2",
     "@polkadot/extension-dapp": "^0.46.6",
+    "bootstrap": "^5.3.2",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.9.2",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"
   },

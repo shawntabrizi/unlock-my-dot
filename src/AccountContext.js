@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
+import { Button, Card, Dropdown } from 'react-bootstrap';
 
 const AccountContext = createContext();
 
@@ -32,39 +33,44 @@ const AccountProvider = ({ appName, children }) => {
 
   return (
     <AccountContext.Provider value={{ selectedAccount, setSelectedAccount }}>
-      <div>
-        {!isConnected ? (
-          <button onClick={connectAccounts}>
-            Connect to Polkadot Extension
-          </button>
-        ) : accounts.length > 0 ? (
-          <div>
-            <label>
-              Select Account:
-              <select>
-                {accounts.map((account) => (
-                  <option
-                    key={account.address}
-                    value={account.address}
-                    onClick={() => handleAccountChange(account)}
-                  >
-                    {account.meta.name} - {account.address}
-                  </option>
-                ))}
-              </select>
-            </label>
+      <Card>
+        <Card.Body>
+        <Card.Title>Account Selector</Card.Title>
+        <div>
+          {!isConnected ? (
+            <Button onClick={connectAccounts}>
+              Connect to Polkadot Extension
+            </Button>
+          ) : accounts.length > 0 ? (
+            <div>
+              <Dropdown>
+                <Dropdown.Toggle variant="primary">
+                  {selectedAccount
+                    ? `${selectedAccount.meta.name} - ${selectedAccount.address}`
+                    : 'Select Account'}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {accounts.map((account) => (
+                    <Dropdown.Item
+                      key={account.address}
+                      onClick={() => handleAccountChange(account)}
+                    >
+                      {account.meta.name} - {account.address}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          ) : (
             <p>
-              <strong>Selected Account:</strong>{' '}
-              {selectedAccount ? selectedAccount.address : 'None'}
+              No accounts found. Make sure the Polkadot extension is installed
+              and unlocked.
             </p>
-          </div>
-        ) : (
-          <p>
-            No accounts found. Make sure the Polkadot extension is installed and
-            unlocked.
-          </p>
-        )}
-      </div>
+          )}
+        </div>
+        </Card.Body>
+      </Card>
       {children}
     </AccountContext.Provider>
   );
