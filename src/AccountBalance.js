@@ -74,6 +74,13 @@ const AccountBalanceProvider = ({ children }) => {
       ? (parseFloat(value) / 10 ** tokenInfo.decimals).toFixed(4)
       : 'Loading Balance...';
 
+  const formattedBalanceName = (value) =>
+    value !== null
+      ? `${(parseFloat(value) / 10 ** tokenInfo.decimals).toFixed(4)} ${
+          tokenInfo.name
+        }`
+      : 'Loading Balance...';
+
   const formattedAddress = () => {
     if (selectedAccount !== null && selectedAccount.address !== null)
       if (api !== null) {
@@ -91,6 +98,7 @@ const AccountBalanceProvider = ({ children }) => {
         setBalances,
         formattedAddress,
         formattedBalance,
+        formattedBalanceName,
         calculateTotalBalance,
         tokenInfo,
       }}

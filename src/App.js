@@ -4,6 +4,7 @@ import { AccountBalance, AccountBalanceProvider } from './AccountBalance';
 import BlockNumber from './BlockNumber';
 import { Container } from 'react-bootstrap';
 import Vesting from './pallets/Vesting';
+import Staking from './pallets/Staking';
 
 function App() {
   return (
@@ -12,7 +13,10 @@ function App() {
         <h1>Unlock My DOT</h1>
       </div>
       {/* In this example, we use a single account context for two different blockchains. */}
-      <AccountProvider appName="unlock-my-dot" forceAccount="5DksjtJER6oLDWkWKCWcL3f1swPWeNNFsS9zHxa2rPa7LsH9">
+      <AccountProvider
+        appName="unlock-my-dot"
+        forceAccounts={['5DksjtJER6oLDWkWKCWcL3f1swPWeNNFsS9zHxa2rPa7LsH9']}
+      >
         <SubstrateProvider providerUrl="wss://rpc.polkadot.io">
           <h2>Polkadot</h2>
           <BlockNumber />
@@ -20,6 +24,7 @@ function App() {
           <AccountBalanceProvider>
             <AccountBalance />
             <Vesting />
+            <Staking />
           </AccountBalanceProvider>
         </SubstrateProvider>
       </AccountProvider>

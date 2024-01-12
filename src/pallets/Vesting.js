@@ -9,7 +9,8 @@ import { web3FromAddress } from '@polkadot/extension-dapp';
 const Vesting = () => {
   const { api } = useSubstrate();
   const { selectedAccount } = useAccount();
-  const { balances, formattedBalance, tokenInfo } = useAccountBalance();
+  const { balances, formattedBalance, formattedBalanceName } =
+    useAccountBalance();
   const [status, setStatus] = useState('');
 
   const claimVested = async () => {
@@ -78,20 +79,17 @@ const Vesting = () => {
           </ProgressBar>
           <p>
             You have a total vesting balance of{' '}
-            {formattedBalance(balances.vestingTotal)} {tokenInfo.name}.
+            {formattedBalanceName(balances.vestingTotal)}.
             <br />
-            You have already claimed {formattedBalance(amountClaimed)}{' '}
-            {tokenInfo.name}.
+            You have already claimed {formattedBalanceName(amountClaimed)}.
             <br />
-            You can unlock {formattedBalance(amountClaimable)} {tokenInfo.name}{' '}
-            right now.
+            You can unlock {formattedBalanceName(amountClaimable)} right now.
             <br />
-            You need to wait to unlock {formattedBalance(amountVesting)}{' '}
-            {tokenInfo.name}.
+            You need to wait to unlock {formattedBalanceName(amountVesting)}.
           </p>
           <div>
             <Button onClick={claimVested}>
-              Unlock {formattedBalance(amountClaimable)} {tokenInfo.name}
+              Unlock {formattedBalanceName(amountClaimable)}
             </Button>
             {status}
           </div>
@@ -99,20 +97,17 @@ const Vesting = () => {
             <summary>Raw Vesting Data</summary>
             <ul>
               <li>
-                Vested Balance: {formattedBalance(balances.vestedBalance)}{' '}
-                {tokenInfo.name}
+                Vested Balance: {formattedBalanceName(balances.vestedBalance)}
               </li>
               <li>
-                Vesting Locked: {formattedBalance(balances.vestingLocked)}{' '}
-                {tokenInfo.name}
+                Vesting Locked: {formattedBalanceName(balances.vestingLocked)}
               </li>
               <li>
-                Vested Claimable: {formattedBalance(balances.vestedClaimable)}{' '}
-                {tokenInfo.name}
+                Vested Claimable:{' '}
+                {formattedBalanceName(balances.vestedClaimable)}
               </li>
               <li>
-                Vesting Total: {formattedBalance(balances.vestingTotal)}{' '}
-                {tokenInfo.name}
+                Vesting Total: {formattedBalanceName(balances.vestingTotal)}
               </li>
               <li>
                 Vesting Breakdown: {JSON.stringify(balances.vesting, null, 2)}
